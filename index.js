@@ -60,13 +60,13 @@ function Wall(height, size, up, turn){
 function setup(){
     bird = new Bird(7)
     walls = []
-    for(i=0;i<5;i++)
-        walls[i] = new Wall(100, 10, true, i)
+    for(i=0;i<100;i++)
+        walls[i] = new Wall(60, 10, i%2==0, i)
 }
 
 function startGame(){    
-    bird.update(count) 
-    for(i=0;i<5;i++)   
+    bird.update(count)
+    for(i=0;i<5;i++)
         walls[i].update();
     count+=0.05;
     window.requestAnimationFrame(startGame);
