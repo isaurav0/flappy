@@ -7,20 +7,57 @@
     <title>Document</title>
     <style>
         #platform{
-            margin: 1%;
+            top: 0px;
+            margin: 0px;
             height: 100%;
-            width: 97%;
+            width: 100%;
+            position: relative;
+        }
+
+        #container{
+            top: 0px;
+            height: 100%;
+            max-width: 100%;
+            margin-left: 0%;
+            margin-top: 0px;
+            margin-bottom: 0px;
+            background-image: url('background.png');
+            background-size: cover;
+            background-repeat: no-repeat;
         }
 
         body{
-            height: 100%;
-            width: 99%;
-            background-image: url('background.png');
+            top: 0px;
+            margin: 0px;
+            padding: 0px;
+            position: relative;
         }
+
+        #setup{
+            position: absolute;
+            color: white;
+            margin-left: 35%;
+        }
+
+        #footer{
+            position: absolute;
+        }
+
     </style>
 </head>
 <body>
-    <canvas id='platform'></canvas>
+    <div id="container">
+        <!-- <div id="setup">
+            <h1>Flappy Bird PC</h1>
+        </div> -->
+        <canvas id='platform'></canvas>
+        <!-- <div id="footer">
+            <p>© Saurav Pathak</p>
+        </div> -->
+    </div>
     <script src='index.js'></script>
+    <audio src="gameover.wav" id="gameOver"></audio>
+    <audio src="ping.wav" id="click"></audio>
+    
 </body>
 </html>

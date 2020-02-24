@@ -1,5 +1,7 @@
 const canvas = document.getElementById('platform');
 const ctx = canvas.getContext('2d');
+const player = new Image(7, 7);
+player.src = "don.png"
 const HEIGHT = canvas.height
 const WIDTH = canvas.width
 const GRAVITY = 0.001;
@@ -12,14 +14,17 @@ function Bird(size){
     // this.y = HEIGHT/2
     this.y = 0
     this.drawBird = function(){
-        ctx.fillStyle = "red";
-        ctx.fillRect(this.x,this.y, size, size);
-        ctx.fill();
+        // ctx.fillStyle = "red";
+        // ctx.fillRect(this.x,this.y, size, size);
+        // ctx.fill();
+        ctx.drawImage(player, this.x,this.y, size, size);
     }
 
     this.update = function(time, clicked){
         this.clearCanvas()
-        if(clicked){
+        if(clicked & this.y>0+this.size){
+            const clickAudio = document.getElementById("click");
+            clickAudio.play();
             this.y -= 15;
         }
         if(this.y<HEIGHT-13){
@@ -39,6 +44,7 @@ function Bird(size){
 
 function Wall(height, size, up, turn){
     this.x = WIDTH-size
+    this.gone = false
 
     this.update = function(){
         this.x -=2;
@@ -48,20 +54,23 @@ function Wall(height, size, up, turn){
     this.drawWall = function(){
         ctx.fillStyle = "green";
         if(up)
-            ctx.fillRect(this.x+turn*100,0, size, height);
+            ctx.fillRect(this.x+turn*90,0, size, height);
         else
-            ctx.fillRect(this.x+turn*100,canvas.height-height, size, height);
+            ctx.fillRect(this.x+turn*50,canvas.height-height, size, height);
+        
+        if(this.gone){
+            this.x = WIDTH-size
+        }
         ctx.fill();
     }
+   
 }
 
-
-
 function setup(){
-    bird = new Bird(7)
+    bird = new Bird(20)
     walls = []
     for(i=0;i<100;i++)
-        walls[i] = new Wall(60, 30, i%2==0, i)
+        walls[i] = new Wall(40, 35, i%2==0, i)
 }
 
 function startGame(){    
@@ -70,25 +79,36 @@ function startGame(){
         walls[i].update();
     }
     if(gameOver(bird, walls)){
-        cancelAnimationFrame(startGame)
-    }
-        
+        const gameOverMusic = document.getElementById("gameOver");
+        gameOverMusic.play()
+        return
+    }        
     count+=0.05;
     window.requestAnimationFrame(startGame);
 }
 
 function gameOver(bird, walls){
-
-    return false;
+    if(bird.y>=HEIGHT-bird.size){        
+        return true
+    }
+    else{
+        return false
+    }
+        
 
 }
 
-
-
-
 setup();
-window.requestAnimationFrame(startGame);
+var request = window.requestAnimationFrame(startGame);
 window.addEventListener("keypress", function(e){
-    bird.update(0, true);  
-    count = 0
+    if(!gameOver(bird, walls)){
+        bird.update(0, true);  
+        count = 0
+    }
+    else{
+        setup();
+        var request = window.requestAnimationFrame(startGame);
+    }
 })
+
+
