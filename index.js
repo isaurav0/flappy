@@ -12,25 +12,25 @@ function Bird(size){
     // this.y = HEIGHT/2
     this.y = 0
     this.drawBird = function(){
-        ctx.fillStyle = "green";
+        ctx.fillStyle = "red";
         ctx.fillRect(this.x,this.y, size, size);
         ctx.fill();
     }
 
     this.update = function(time, clicked){
+        this.clearCanvas()
         if(clicked){
             this.y -= 15;
         }
         if(this.y<HEIGHT-13){
             this.y = this.y + count ;
-            this.clearCanvas()
+            // this.clearCanvas()
         }
         this.drawBird();        
     }
 
     this.clearCanvas= function(){
-        ctx.fillStyle = "black";
-        ctx.fillRect(0,0,WIDTH, HEIGHT);
+        ctx.clearRect(0,0,WIDTH, HEIGHT);
         ctx.fill();
     }
     
@@ -46,11 +46,11 @@ function Wall(height, size, up, turn){
     }
 
     this.drawWall = function(){
-        ctx.fillStyle = "red";
+        ctx.fillStyle = "green";
         if(up)
-            ctx.fillRect(this.x+turn*100,0, 10, height);
+            ctx.fillRect(this.x+turn*100,0, size, height);
         else
-            ctx.fillRect(this.x+turn*100,canvas.height-height, 10, height);
+            ctx.fillRect(this.x+turn*100,canvas.height-height, size, height);
         ctx.fill();
     }
 }
@@ -61,16 +61,30 @@ function setup(){
     bird = new Bird(7)
     walls = []
     for(i=0;i<100;i++)
-        walls[i] = new Wall(60, 10, i%2==0, i)
+        walls[i] = new Wall(60, 30, i%2==0, i)
 }
 
 function startGame(){    
     bird.update(count)
-    for(i=0;i<5;i++)
+    for(i=0;i<100;i++){
         walls[i].update();
+    }
+    if(gameOver(bird, walls)){
+        cancelAnimationFrame(startGame)
+    }
+        
     count+=0.05;
     window.requestAnimationFrame(startGame);
 }
+
+function gameOver(bird, walls){
+
+    return false;
+
+}
+
+
+
 
 setup();
 window.requestAnimationFrame(startGame);
