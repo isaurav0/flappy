@@ -1,14 +1,22 @@
-const canvas = document.getElementById('platform');
-const ctx = canvas.getContext('2d');
-const player = new Image(7, 7);
-player.src = "don.png";
+// var canvas = document.getElementById('platform');
+// var ctx = canvas.getContext('2d');
+// var player = new Image(7, 7);
+// player.src = "./images/don.png";
 
-const HEIGHT = canvas.height;
-const WIDTH = canvas.width;
-const GRAVITY = 1; 
-var count = 1;
-var score = 0;
-gameStop = false;
+// var HEIGHT = canvas.height;
+// var WIDTH = canvas.width;
+// var GRAVITY = 1; 
+// var count = 1;
+// var score = 0;
+var gameStop = false;
+
+// window.addEventListener('resize', setCanvas(canvas.width, canvas.height))
+window.addEventListener('resize', e=>{
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    HEIGHT = canvas.height;
+    WIDTH = canvas.width;
+})
 
 
 function Bird(size){
@@ -72,22 +80,34 @@ function Wall(height, size, turn, gap, distance){
 }
 
 
-function setup(){   
+function gameStart(){   
+
+    canvas = document.getElementById('platform');
+    ctx = canvas.getContext('2d');
+    player = new Image(7, 7);
+    player.src = "./images/don.png";
+
     count = 0
     score = 0 
     gameStop = false
+    HEIGHT = canvas.height;
+    WIDTH = canvas.width;
+    GRAVITY = 1; 
+    count = 0;
+    score = 0;
     bird = new Bird(20)
     walls = []
     for(i=0;i<5;i++){
         walls[i] = new Wall(40, 35, i, 40, 1)
     }
-        
+    var request = window.requestAnimationFrame(runningState);
 }
 
-function startGame(){    
+
+
+function runningState(){    
 
     bird.update(count)
-
     if(walls[0].x < - walls[0].size - 20 ){
         score++;
         walls = walls.slice(1, )
@@ -110,8 +130,7 @@ function startGame(){
         return
     }        
     count+=0.05;
-    window.requestAnimationFrame(startGame);
-    console.log("animating")
+    window.requestAnimationFrame(runningState);
 }
 
 function gameOver(bird, wall){
@@ -127,35 +146,29 @@ function gameOver(bird, wall){
 }
 
 function collide(bird, wall){
-    if(isWallActive(bird, wall) && ((bird.y <= wall.height) || bird.y+bird.size >= (wall.height+wall.gap))){
+    if(isWallActive(bird, wall) && ((bird.y < wall.height) || bird.y+bird.size > (wall.height+wall.gap))){
         return true
     }
     else
         return false
 }
 
-function isWallActive(bird, wall){
-    if(wall.x <= 40 && wall.x>=-wall.size){
+function isWallActive(bird, wall){    
+
+    //from front and back
+    if(bird.x+bird.size >= wall.x && bird.x <= wall.x + wall.size)
         return true
-    }        
-    else{
+    else
         return false
-    }        
+
 }
 
-
-//actual events happening
-setup();
-var request = window.requestAnimationFrame(startGame);
 window.addEventListener("keypress", function(e){
     if(!gameStop){
         bird.update(0, true);
         count = 0
     }
-    else{
-        setup();
-        var request = window.requestAnimationFrame(startGame);        
-    }
 })
 
-
+//actual events happening
+gameStart();
