@@ -16,7 +16,7 @@
         #platform{
             top: 0px;
             margin: 0px;
-            border: 1px solid blue;
+            border: 0px;
             height: 99.5%;
             width: 99.5%;
         }
@@ -116,7 +116,7 @@
         <h1 class="child">Flappy Bird Web</h1>
         <h4 class="child small">By</h4>
         <h3 class="child saurav"><a href="https://saurabpathak.com.np">Saurav</a></h3>
-        <a href="index.html" class="child" id="start">Play</a>
+        <a href="game.html" class="child" id="start">Play</a>
     </div>
     
     <div id="container">
@@ -125,6 +125,15 @@
             <a href="https://saurabpathak.com.np">saurabpathak.com.np</a>
         </div> 
     </div>
+    <!-- <script src="score.js"></script> -->
+
+    <script>
+        window.addEventListener('keypress', function(){
+            window.location = "game.html"
+            //readTextFile("./score.txt")
+        })
+        
+    </script>
     
 </body>
 </html>

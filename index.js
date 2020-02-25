@@ -19,10 +19,13 @@ function Bird(size){
 
     this.update = function(clicked, GRAVITY){
         this.clearCanvas()
-        if(clicked && this.y>0){            
+        if(clicked && this.y>0){
+            readyToFly = false        
             this.y -= 15;
             const wingAudio = document.getElementById("wing");
             wingAudio.play();
+            setTimeout(function() { readyToFly= true }, 00);
+            
         }
         else if(this.y<HEIGHT-13){
             this.y = this.y + GRAVITY ;
@@ -41,14 +44,17 @@ function Bird(size){
 }
 
 
-function Wall(height, size, turn, gap, distance){
-    this.x = WIDTH + turn*distance*100
-    this.size = size
-    this.gap = gap
+function Wall(height, gap, x){
     this.height = height
+    this.gap = gap
+    this.x = x 
+    this.size = 35
 
     this.update = function(isActive){
-        this.x -=2;                
+        if(score>25 && score<30)
+            this.x -= 2
+        else
+            this.x -=2 + Math.floor(score%25/5);
         if(isActive)
             ctx.fillStyle = "orange";
         else
@@ -57,11 +63,11 @@ function Wall(height, size, turn, gap, distance){
     }
 
     this.drawWall = function(){                
-        ctx.fillRect(this.x,0, size, height);
-        ctx.fillRect(this.x-3,height-4, size+6, 4);
+        ctx.fillRect(this.x,0, this.size, height);
+        ctx.fillRect(this.x-3,height-4, this.size+6, 4);
 
-        ctx.fillRect(this.x,height+gap, size, HEIGHT);
-        ctx.fillRect(this.x-3,height+gap-2, size+6, 4);
+        ctx.fillRect(this.x,height+gap, this.size, HEIGHT);
+        ctx.fillRect(this.x-3,height+gap-2, this.size+6, 4);
         ctx.fill();
     }
    
@@ -98,9 +104,13 @@ function isWallActive(bird, wall){
 }
 
 window.addEventListener("keypress", function(e){
-    if(!gameStop){
+    if(!gameStop && readyToFly){
         bird.update(true, 0);
         GRAVITY = 0
+    }
+
+    if(startonclick){
+        window.location.reload()
     }
 })
 
@@ -120,11 +130,24 @@ function gameSetup(){
     bird = new Bird(20);
     walls = [];
     scoreUpdate = false
-    for(i=0;i<5;i++){
-        // Wall(height, size, turn, gap, distance)
-        walls[i] = new Wall(80, 35, i, 50, 1)
+    startonclick = false
+    walls[0] = new Wall(random(10,60), random(50,60), WIDTH)
+    readyToFly = true
+    console.log(walls[0].x)
+    for(i=1;i<5;i++){
+        // Wall(height, gap, x)
+        walls[i] = new Wall(random(10,60), 50, walls[i-1].x+random(100,200))
+        // walls[i] = new Wall(random(10,60), walls[i-1].x )
+        console.log(walls[i-1].x)
+        // console.log(walls[i])
+        // walls[i] = new Wall(1 , 35, i, 50, 1)
     }    
+    
     var request = window.requestAnimationFrame(runningState);
+}
+
+function random(min, max){
+    return Math.floor(Math.random() * (+max - +min) + +min )
 }
 
 
@@ -153,7 +176,7 @@ function runningState(){
     if(walls[0].x < - walls[0].size - 10){
         walls = walls.slice(1, )
         // Wall(height, size, turn, gap, distance)
-        wall = new Wall(40, 35, 1, 40, 2)
+        wall = new Wall(random(10,60), random(50,60), walls[walls.length-1].x+random(100,200))
         walls.push(wall)
     }
         
@@ -173,9 +196,10 @@ function runningState(){
         const mainMenu = document.getElementById("mainmenu");
         playAgain.style.visibility= "visible"
         mainMenu.style.visibility= "visible"
-
+        setTimeout(function() { startonclick= true }, 500);
         return
-    }        
+    }
+
     GRAVITY+=0.05;
     window.requestAnimationFrame(runningState);
 }

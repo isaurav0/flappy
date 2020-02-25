@@ -32,7 +32,7 @@
         #platform{
             top: 0px;
             margin: 0px;
-            border: 1px solid blue;
+            border: 0px;
             height: 99.5%;
             width: 99.5%;
         }
@@ -74,7 +74,7 @@
         }
 
         .start{
-            margin-top: 1em;
+            margin-top: 0.5em;
             font-family: Flappy; 
             font-size: 7em;
             border: none;
@@ -82,7 +82,7 @@
             padding: 0px;
             text-decoration: none;
             visibility: hidden;
-            color: skyblue;            
+            color: white;            
         }
 
         .start:hover{
@@ -106,6 +106,7 @@
         }
 
 
+
     </style>
 </head>
 <body>
@@ -113,8 +114,8 @@
 
     <div id = "parent">
         <h1 class="child" id="score" style="color: white; font-family: score;">0</h1>
-        <a href="index.html" class="child playagain start" id="start"> Play Again</a>
-        <a href="greet.html" class="child playagain start" id="mainmenu"> Main Menu</a>
+        <a href="game.html" class="child  start" id="start"> Play Again</a>
+        <a href="greet.html" class="child start" id="mainmenu"> Main Menu</a>
         <!-- <h4 class="child">111</h4> -->
         <!-- <h3 class="child">Saurav</h3> -->
     </div>
@@ -125,7 +126,7 @@
 
     <script src='index.js'></script>
     <audio src="./audio/gameover.wav" id="gameOver"></audio>
-    <audio src="./audio/ping.wav" id="click"></audio>
+    <audio src="./audio/point.wav" id="click"></audio>
     <audio src="./audio/wing.wav" id="wing"></audio>
         
 </body>
