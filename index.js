@@ -1,23 +1,9 @@
-// var canvas = document.getElementById('platform');
-// var ctx = canvas.getContext('2d');
-// var player = new Image(7, 7);
-// player.src = "./images/don.png";
-
-// var HEIGHT = canvas.height;
-// var WIDTH = canvas.width;
-// var GRAVITY = 1; 
-// var count = 1;
-// var score = 0;
-var gameStop = false;
-
-// window.addEventListener('resize', setCanvas(canvas.width, canvas.height))
 window.addEventListener('resize', e=>{
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     HEIGHT = canvas.height;
     WIDTH = canvas.width;
 })
-
 
 function Bird(size){
     this.size = size;
@@ -31,25 +17,27 @@ function Bird(size){
         ctx.drawImage(player, this.x,this.y, size, size);
     }
 
-    this.update = function(time, clicked){
+    this.update = function(clicked, GRAVITY){
         this.clearCanvas()
-        if(clicked & this.y>0+this.size){
-            const clickAudio = document.getElementById("click");
-            clickAudio.play();
+        if(clicked && this.y>0){            
             this.y -= 15;
+            const wingAudio = document.getElementById("wing");
+            wingAudio.play();
         }
-        if(this.y<HEIGHT-13){
-            this.y = this.y + count ;
+        else if(this.y<HEIGHT-13){
+            this.y = this.y + GRAVITY ;
             // this.clearCanvas()
         }
-        this.drawBird();        
+        else{
+
+        }
+        this.drawBird();
     }
 
     this.clearCanvas= function(){
         ctx.clearRect(0,0,WIDTH, HEIGHT);
         ctx.fill();
     }
-    
 }
 
 
@@ -79,60 +67,6 @@ function Wall(height, size, turn, gap, distance){
    
 }
 
-
-function gameStart(){   
-
-    canvas = document.getElementById('platform');
-    ctx = canvas.getContext('2d');
-    player = new Image(7, 7);
-    player.src = "./images/don.png";
-
-    count = 0
-    score = 0 
-    gameStop = false
-    HEIGHT = canvas.height;
-    WIDTH = canvas.width;
-    GRAVITY = 1; 
-    count = 0;
-    score = 0;
-    bird = new Bird(20)
-    walls = []
-    for(i=0;i<5;i++){
-        walls[i] = new Wall(40, 35, i, 40, 1)
-    }
-    var request = window.requestAnimationFrame(runningState);
-}
-
-
-
-function runningState(){    
-
-    bird.update(count)
-    if(walls[0].x < - walls[0].size - 20 ){
-        score++;
-        walls = walls.slice(1, )
-        wall = new Wall(40, 35, 1, 50, 0.9)
-        walls.push(wall)
-    }
-    
-    for(i=0;i<walls.length;i++){
-        if(isWallActive(bird, walls[i]))
-            walls[i].update(true)
-        else
-            walls[i].update(false)
-    }    
-    
-
-    if(gameOver(bird, walls[0])){
-        const gameOverMusic = document.getElementById("gameOver");
-        gameOverMusic.play()
-        gameStop = true
-        return
-    }        
-    count+=0.05;
-    window.requestAnimationFrame(runningState);
-}
-
 function gameOver(bird, wall){
     if(bird.y>=HEIGHT-bird.size){        
         return true
@@ -146,7 +80,7 @@ function gameOver(bird, wall){
 }
 
 function collide(bird, wall){
-    if(isWallActive(bird, wall) && ((bird.y < wall.height) || bird.y+bird.size > (wall.height+wall.gap))){
+    if(isWallActive(bird, wall) && ((bird.y <= wall.height) || bird.y+bird.size >= (wall.height+wall.gap))){
         return true
     }
     else
@@ -165,10 +99,86 @@ function isWallActive(bird, wall){
 
 window.addEventListener("keypress", function(e){
     if(!gameStop){
-        bird.update(0, true);
-        count = 0
+        bird.update(true, 0);
+        GRAVITY = 0
     }
 })
 
-//actual events happening
-gameStart();
+
+function gameSetup(){   
+    canvas = document.getElementById('platform');
+    ctx = canvas.getContext('2d');    
+
+    player = new Image(7, 7);
+    player.src = "./images/don.png";
+
+    score = 0;
+    gameStop = false;
+    HEIGHT = canvas.height;
+    WIDTH = canvas.width;
+    GRAVITY = 0;
+    bird = new Bird(20);
+    walls = [];
+    scoreUpdate = false
+    for(i=0;i<5;i++){
+        // Wall(height, size, turn, gap, distance)
+        walls[i] = new Wall(80, 35, i, 50, 1)
+    }    
+    var request = window.requestAnimationFrame(runningState);
+}
+
+
+
+function runningState(){  
+    //bird.update(clicked, GRAVITY)  GRAVITY is for accelerating in freefall
+    bird.update(false, GRAVITY)
+
+    //update score
+    if(isWallActive(bird, walls[0]))
+        scoreUpdate = true
+    else{
+        if(scoreUpdate){
+            score++;
+            const clickAudio = document.getElementById("click");
+            clickAudio.play();
+
+            //show score
+            scoreBoard = document.getElementById("score");
+            scoreBoard.innerText = score
+            scoreUpdate = false
+        }
+    }
+    
+    //implement queue for walls
+    if(walls[0].x < - walls[0].size - 10){
+        walls = walls.slice(1, )
+        // Wall(height, size, turn, gap, distance)
+        wall = new Wall(40, 35, 1, 40, 2)
+        walls.push(wall)
+    }
+        
+    for(i=0;i<walls.length;i++){
+        if(isWallActive(bird, walls[i]))
+            walls[i].update(false)
+        else
+            walls[i].update(false)
+    }    
+    
+
+    if(gameOver(bird, walls[0])){
+        const gameOverMusic = document.getElementById("gameOver");
+        gameOverMusic.play()
+        gameStop = true 
+        const playAgain = document.getElementById("start");
+        const mainMenu = document.getElementById("mainmenu");
+        playAgain.style.visibility= "visible"
+        mainMenu.style.visibility= "visible"
+
+        return
+    }        
+    GRAVITY+=0.05;
+    window.requestAnimationFrame(runningState);
+}
+
+
+gameSetup();

@@ -4,29 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Flappy</title>
+    <title>Document</title>
     <style>
 
         @font-face {
             font-family: 'flappy';
             src: url('./fonts/FlappyBirdy.woff') format('woff'), /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
              url('./fonts/FlappyBirdy.ttf') format('truetype'); /* Chrome 4+, Firefox 3.5, Opera 10+, Safari 3—5 */
-        }
-
-
-        @font-face {
-            font-family: 'score';
-            src: url('./fonts/score.woff') format('woff'), /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
-             url('./fonts/score.ttf') format('truetype'); /* Chrome 4+, Firefox 3.5, Opera 10+, Safari 3—5 */
-        }
-
-        body{
-            top: 0px;
-            margin: 0px;
-            padding: 0px;
-            width: 100%;
-            height: 100%;
-            position: absolute;
         }
 
         #platform{
@@ -49,6 +33,15 @@
             background-repeat: no-repeat;
         }
 
+        body{
+            top: 0px;
+            margin: 0px;
+            padding: 0px;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+        }
+
 
         #footer{
             position: absolute;
@@ -60,73 +53,78 @@
             justify-content: center;
             align-items: center;
             position: absolute;
-            width: 100%;            
+            width: 100%;
+            font-family: Flappy;
             margin-top: 2em;
-            
+            opacity: 100%;
         }
         .child{
             justify-self: center;
             align-self: center;
             margin: 0px;
-            font-size: 5em;
-            color: orange;
-            font-family: flappy;
+            font-size: 7em;
+            color: white;
+            opacity: 500;
         }
 
-        .start{
+        .small{
+            font-size: 3em;
+        }
+
+        #start{
             margin-top: 1em;
             font-family: Flappy; 
-            font-size: 7em;
+            font-size: 200px;
+            color: skyblue;
+            background: white;
             border: none;
             outline: none;
             padding: 0px;
-            text-decoration: none;
-            visibility: hidden;
-            color: skyblue;            
         }
 
-        .start:hover{
-            text-decoration: underline;
-            outline: none;
+        #start:hover{
+            background: skyblue;
+            color: white;
         }
         
+        #start span{
+            padding: 0px;
+            margin: 0px;
+            margin-top: 10px;
+        }
         a{
+            margin: 0px;
+            padding: 0px;
             text-align: center;
+            text-decoration: none;
+        }
+        a:visited{
+            color: white;
+            font-style: normal;
+            text-decoration: none;
         }
 
-        .blur {
-            width:100%;
-            height:100%;
-            background-size:cover;
-            -webkit-filter: blur(4px);
-            -moz-filter: blur(4px);
-            -ms-filter: blur(4px);
-            -o-filter: blur(4px);
-            filter: blur(4px);
-        }
 
+        .saurav:hover{
+            text-decoration: underline;
+        }
 
     </style>
 </head>
 <body>
-
-
     <div id = "parent">
-        <h1 class="child" id="score" style="color: white; font-family: score;">0</h1>
-        <a href="index.html" class="child playagain start" id="start"> Play Again</a>
-        <a href="greet.html" class="child playagain start" id="mainmenu"> Main Menu</a>
-        <!-- <h4 class="child">111</h4> -->
-        <!-- <h3 class="child">Saurav</h3> -->
+        <h1 class="child">Flappy Bird Web</h1>
+        <h4 class="child small">By</h4>
+        <h3 class="child saurav"><a href="https://saurabpathak.com.np">Saurav</a></h3>
+        <a href="index.html" class="child" id="start">Play</a>
     </div>
     
     <div id="container">
         <canvas id='platform'></canvas>
+        <div id="footer">
+            <a href="https://saurabpathak.com.np">saurabpathak.com.np</a>
+        </div> 
     </div>
-
-    <script src='index.js'></script>
-    <audio src="./audio/gameover.wav" id="gameOver"></audio>
-    <audio src="./audio/ping.wav" id="click"></audio>
-    <audio src="./audio/wing.wav" id="wing"></audio>
-        
+    
 </body>
 </html>
