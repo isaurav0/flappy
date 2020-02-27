@@ -56,16 +56,13 @@ function Wall(height, gap, x){
     this.x = x 
     // this.size = 35
     this.size = 160
+    this.speed = 0
 
     this.update = function(isActive){
-        if(score>25 && score<30){
-            this.x -= 2*3
-        }
-        else{
-            speed = Math.floor(score%25/5);
-            this.x -=(2 + speed)*3
+            this.speed = Math.floor(score%25/5);
+            this.x -=(2 + this.speed)*3
 
-        }
+            console.log(this.speed)
             
         if(isActive)
             ctx.fillStyle = "orange";
@@ -76,10 +73,10 @@ function Wall(height, gap, x){
 
     this.drawWall = function(){                
         ctx.fillRect(this.x,0, this.size, height);
-        // ctx.fillRect(this.x-30,height-40, this.size+60, 40);
+        ctx.fillRect(this.x-7,height-40, this.size+14, 40);
 
         ctx.fillRect(this.x,height+gap, this.size, HEIGHT);
-        // ctx.fillRect(this.x-30,height+gap-40, this.size+60, 40);
+        ctx.fillRect(this.x-7,height+gap, this.size+14, 40);
         ctx.fill();
     }
    
@@ -97,13 +94,45 @@ function gameOver(bird, wall){
     }
 }
 
+// function collide(bird, wall){
+//     if(isWallActive(bird, wall) && ((bird.y <= wall.height) || bird.y+bird.size >= (wall.height+wall.gap))){
+//         return true
+//     }
+//     else
+//         return false
+// }
+
 function collide(bird, wall){
-    if(isWallActive(bird, wall) && ((bird.y <= wall.height) || bird.y+bird.size >= (wall.height+wall.gap))){
-        return true
+    back = false
+    front = false
+    down = false
+    up = false
+    mid = false
+
+    // if(bird.x + bird.size)
+    // if(bird.x + bird.size >= wall.x){
+    //     console.log("front = true")
+    //     front = false
+    // }
+
+
+
+
+    // if(bird.x + bird.size <= wall.x - 20){
+    //     console.log("front = false")
+    // }
+
+
+    if(isWallActive(bird, wall)){
+        if (bird.y <= wall.height)
+            return true
+        if(bird.y+bird.size >= (wall.height+wall.gap))
+            return true
     }
     else
         return false
 }
+
 
 function isWallActive(bird, wall){    
 
@@ -127,43 +156,27 @@ window.addEventListener("keypress", function(e){
 })
 
 
-function gameSetup(){   
-    canvas = document.getElementById('platform');
-    canvas.height = window.innerHeight
-    canvas.width = window.innerWidth
-    ctx = canvas.getContext('2d');        
-
-    player = new Image();
-    // player.src = "./images/charo.png";
-    player.src = "./images/risako_charo.svg";
-    
-    // player.src = "http://upload.wikimedia.org/wikipedia/commons/d/d2/Svg_example_square.svg";
-
-    score = 0;
-    gameStop = false;
-    HEIGHT = canvas.height;
-    WIDTH = canvas.width;
-    GRAVITY = 0;
-    bird = new Bird(80);
-    walls = [];
-    scoreUpdate = false
-    startonclick = false
-    walls[0] = new Wall(random(100,400),  random(190,250), WIDTH) 
-    readyToFly = true
-    for(i=1;i<5;i++){
-        // Wall(height, gap, x)
-        walls[i] = new Wall(random(100,400), 300, walls[i-1].x+random(400,600))
-        // walls[i] = new Wall(random(10,60), walls[i-1].x )
-        // console.log(walls[i-1].x)
-        // console.log(walls[i])
-        // walls[i] = new Wall(1 , 35, i, 50, 1)
-    }    
-    var request = window.requestAnimationFrame(runningState);
-}
-
 function random(min, max){
     return Math.floor(Math.random() * (+max - +min) + +min )
 }
+
+
+//if speed = 0
+    // height = random(100,400)
+    // distance = random(450,)
+
+//if 
+
+function lastWall(walls){
+    last = 0
+    for(i=0;i<walls.length;i++){
+        if(walls[i].x > last){
+            last = walls[i]
+        }
+    }
+    return last
+}
+
 
 
 
@@ -199,14 +212,17 @@ function runningState(){
         walls = walls.slice(1, )
         // Wall(height, size, turn, gap, distance)
         // wall = new Wall(random(10,60), random(50,60), walls[walls.length-1].x+random(100,200))
-        wall = new Wall(random(100,400), random(250,400), walls[walls.length-1].x+random(600,900))
+        wallHeight = random(100,400)
+        // if(wallHeight)
+        // if(Math.abs(lastWall(walls).height-wallHeight)>100)
+            wall = new Wall(wallHeight, random(200,250), walls[walls.length-1].x+random(400,600))
         walls.push(wall)
     }
         
     for(i=0;i<walls.length;i++){
-        if(isWallActive(bird, walls[i]))
-            walls[i].update(false)
-        else
+        // if(isWallActive(bird, walls[i]))
+            // walls[i].update(true)
+        // else
             walls[i].update(false)
     }    
     
@@ -227,6 +243,45 @@ function runningState(){
     window.requestAnimationFrame(runningState);
 }
 
+
+function gameSetup(){   
+    canvas = document.getElementById('platform');
+    canvas.height = window.innerHeight
+    canvas.width = window.innerWidth
+    ctx = canvas.getContext('2d');        
+
+    player = new Image();
+    // player.src = "./images/charo.png";
+    player.src = "./images/risako_charo.svg";
+    
+    // player.src = "http://upload.wikimedia.org/wikipedia/commons/d/d2/Svg_example_square.svg";
+
+    score = 0;
+    gameStop = false;
+    HEIGHT = canvas.height;
+    WIDTH = canvas.width;
+    GRAVITY = 0;
+    bird = new Bird(80);
+    walls = [];
+    scoreUpdate = false
+    startonclick = false
+    // walls[0] = new Wall(random(100,400),  random(190,250), WIDTH) 
+    walls[0] = new Wall(100,  190, WIDTH) 
+    readyToFly = true
+    for(i=1;i<5;i++){
+        // Wall(height, gap, x)
+        walls[i] = new Wall(400, 190, walls[i-1].x+450)
+        // walls[i] = new Wall(400 , 300, walls[i-1].x+random(400,600)) //original
+        
+        // walls[i] = new Wall(random(10,60), walls[i-1].x )
+        // console.log(walls[i-1].x)
+        // console.log(walls[i])
+        // walls[i] = new Wall(1 , 35, i, 50, 1)
+    } 
+    
+    // walls[2] = new Wall(100, 190, walls[i-1].x+500)
+    var request = window.requestAnimationFrame(runningState);
+}
 
 
 gameSetup();
