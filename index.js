@@ -8,7 +8,7 @@ window.addEventListener('resize', e=>{
 
 function Bird(size){
     this.size = size;
-    this.x = 10
+    this.x = 30
     // this.y = HEIGHT/2
     this.y = 0
     this.drawBird = function(){
@@ -50,18 +50,20 @@ function Bird(size){
 }
 
 
-function Wall(height, gap, x){
+function Wall(height, gap, x, config){
     this.height = height
     this.gap = gap
     this.x = x 
     // this.size = 35
     this.size = 160
     this.speed = 0
+    this.config = config
 
     this.update = function(isActive){
             this.speed = Math.floor(score%25/5);
-            // this.speed = 2
+            // this.speed = 3
             this.x -=(2 + this.speed)*5
+            // console.log(this.config)
 
             
         if(isActive)
@@ -143,9 +145,9 @@ function random(min, max){
 
 
 function lastWall(walls){
-    last = 0
+    last = new Wall(0,0,0,'test wall')
     for(i=0;i<walls.length;i++){
-        if(walls[i].x > last){
+        if(walls[i].x > last.x){
             last = walls[i]
         }
     }
@@ -156,6 +158,9 @@ function lastWall(walls){
 function runningState(){
     //bird.update(clicked, GRAVITY)  GRAVITY is for accelerating in freefall
     bird.update(false, GRAVITY)
+    // console.log(walls[0].config)
+    // speed = Math.floor(score%25/5);
+
     //update score
     if(isWallActive(bird, walls[0]))
         scoreUpdate = true
@@ -180,41 +185,63 @@ function runningState(){
         }
     }
     
-    //implement queue for walls
+    // implement queue for walls
     if(walls[0].x < - walls[0].size - 10){
-        console.log(walls[0])
+
+        speed = Math.floor(score%25/5);
         
-        
-        if( walls[0].speed = 4 ){ //0 speed config
+        if( speed == 4 ){ //0 speed config
             console.log("0 speed config added")
             // wall = new Wall(random(100,400), random(200,400), walls[walls.length-1].x+random(400,600))
-            wall = new Wall(random(100,300), random(200,300), walls[walls.length-1].x+random(400,600))
-            walls.push(wall)
+            wall = new Wall(random(100,300), random(200,300), walls[walls.length-1].x+random(400,600), "config 0 speed")
+            // walls.push(wall)
         }
         
-        if(walls[0].speed = 0){ //1 speed config
-            console.log("speed 1 config added")
+        if(speed == 0){ //1 speed config completed
+            console.log("1 speed wall added")
             wallHeight = random(100, 400)
-            wall = new Wall(wallHeight, random(200,400), walls[walls.length-1].x+random(600,700))
+            console.log(lastWall(walls).x)
+            // console.log(walls[walls.length-1].x)
+            // wall = new Wall(wallHeight, random(200,400), walls[walls.length-1].x+random(700,800), "config 1 speed")
+            if(wallHeight - walls[walls.length-1].height>=300)
+                wall = new Wall(wallHeight, random(200,300), lastWall(walls).x+random(650,700), "config 1 wall")
+            else
+                wall = new Wall(wallHeight, random(200,300), lastWall(walls).x+random(600,700), "config 1 wall")
         }
 
-        if(walls[0].speed = 1){ //2 speed config
-            console.log("speed 2 config added")
+        if(speed == 1){ //2 speed config completed
+            console.log("2 speed wall added")
             wallHeight = random(100, 300)
             if(wallHeight - walls[walls.length-1].height>=300)
-                wall = new Wall(wallHeight, random(200,350), walls[walls.length-1].x+random(900,1000))
+                wall = new Wall(wallHeight, random(200,350), walls[walls.length-1].x+random(900,1000), "config 2 speed")
             else 
-                wall = new Wall(wallHeight, random(200,350), walls[walls.length-1].x+random(700,800))
+                wall = new Wall(wallHeight, random(200,350), walls[walls.length-1].x+random(700,800), "config 2 speed")
         } 
 
+        if(speed == 2){ //3 speed config remaining to be tuned
+            console.log("3 speed wall added")
+            if(wallHeight - walls[walls.length-1].height>=300)
+                wall = new Wall(wallHeight, random(200,350), walls[walls.length-1].x+random(900,1000), "config 3 speed")
+            else 
+                wall = new Wall(wallHeight, random(200,350), walls[walls.length-1].x+random(700,800), "config 3 speed")
+        }
+
+        if(speed == 3){ // 4 speed config
+            console.log("4 speed wall added")
+            if(wallHeight - walls[walls.length-1].height>=300)
+                wall = new Wall(wallHeight, random(200,350), walls[walls.length-1].x+random(900,1000), "config 4 speed")
+            else 
+                wall = new Wall(wallHeight, random(200,350), walls[walls.length-1].x+random(700,800), "config 4 speed")
+
+        }
+
+        walls.push(wall)
 
 
         walls = walls.slice(1, )
-            // walls[i]
         // if(wallHeight)
         // if(Math.abs(lastWall(walls).height-wallHeight)>100)
             // wall = new Wall(wallHeight, random(200,250), walls[walls.length-1].x+random(400,600))
-        
     }
         
     for(i=0;i<walls.length;i++){
@@ -261,12 +288,12 @@ function gameSetup(){
     walls = [];
     scoreUpdate = false
     startonclick = false
-    walls[0] = new Wall(random(100,400), random(190,250), WIDTH) //for begining
-    // walls[0] = new Wall(100,  200, WIDTH) //for speed 2 test
+    walls[0] = new Wall(random(100,400), random(190,250), WIDTH, "config 0 ") //for begining
+    walls[0] = new Wall(100,  200, WIDTH) //for speed 3 test
     readyToFly = true
     for(i=1;i<5;i++){
-        walls[i] = new Wall(random(100,400), 190, walls[i-1].x+random(600,700)) //final
-        // walls[i] = new Wall(random(100,400), 190, walls[i-1].x+random(800,900)) //for speed 2 test
+        walls[i] = new Wall(random(100,400), random(190,250), walls[i-1].x+random(600,700), "config 0 ") //final
+        // walls[i] = new Wall(random(100,400), 190, walls[i-1].x+random(800,900)) //for speed 3 test
     } 
     
     // walls[2] = new Wall(100, 190, walls[i-1].x+500)
@@ -282,5 +309,7 @@ function gameSetup(){
 //if speed = 1
     // height = random(100,400)
 
+//if speed = 3
+    //height = 
 
 gameSetup();
