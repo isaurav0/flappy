@@ -158,7 +158,6 @@ function lastWall(walls){
 function runningState(){
     //bird.update(clicked, GRAVITY)  GRAVITY is for accelerating in freefall
     bird.update(false, GRAVITY)
-    // console.log(walls[0].config)
     // speed = Math.floor(score%25/5);
 
     //update score
@@ -189,6 +188,9 @@ function runningState(){
     if(walls[0].x < - walls[0].size - 10){
 
         speed = Math.floor(score%25/5);
+        console.log(speed)
+        wallHeight = random(100, 400)
+        lastHeight = walls[walls.length-1].height
         
         if( speed == 4 ){ //0 speed config
             console.log("0 speed config added")
@@ -199,11 +201,10 @@ function runningState(){
         
         if(speed == 0){ //1 speed config completed
             console.log("1 speed wall added")
-            wallHeight = random(100, 400)
-            console.log(lastWall(walls).x)
+            // console.log(lastWall(walls).x)
             // console.log(walls[walls.length-1].x)
             // wall = new Wall(wallHeight, random(200,400), walls[walls.length-1].x+random(700,800), "config 1 speed")
-            if(wallHeight - walls[walls.length-1].height>=300)
+            if(wallHeight - lastHeight>=250)
                 wall = new Wall(wallHeight, random(200,300), lastWall(walls).x+random(650,700), "config 1 wall")
             else
                 wall = new Wall(wallHeight, random(200,300), lastWall(walls).x+random(600,700), "config 1 wall")
@@ -212,32 +213,31 @@ function runningState(){
         if(speed == 1){ //2 speed config completed
             console.log("2 speed wall added")
             wallHeight = random(100, 300)
-            if(wallHeight - walls[walls.length-1].height>=300)
-                wall = new Wall(wallHeight, random(200,350), walls[walls.length-1].x+random(900,1000), "config 2 speed")
+            if(wallHeight - lastHeight>=250)
+                wall = new Wall(wallHeight, random(200,350), walls[walls.length-1].x+900, "config 2 speed")
             else 
                 wall = new Wall(wallHeight, random(200,350), walls[walls.length-1].x+random(700,800), "config 2 speed")
         } 
 
         if(speed == 2){ //3 speed config remaining to be tuned
             console.log("3 speed wall added")
-            if(wallHeight - walls[walls.length-1].height>=300)
-                wall = new Wall(wallHeight, random(200,350), walls[walls.length-1].x+random(900,1000), "config 3 speed")
+            wallHeight = random(100,200)
+            if(wallHeight - lastHeight>=300)
+                wall = new Wall(wallHeight, random(200,400), walls[walls.length-1].x+1200, "config 3")
             else 
-                wall = new Wall(wallHeight, random(200,350), walls[walls.length-1].x+random(700,800), "config 3 speed")
+                wall = new Wall(wallHeight, random(200,400), walls[walls.length-1].x+random(500,1200), "config 3")
         }
 
         if(speed == 3){ // 4 speed config
             console.log("4 speed wall added")
-            if(wallHeight - walls[walls.length-1].height>=300)
-                wall = new Wall(wallHeight, random(200,350), walls[walls.length-1].x+random(900,1000), "config 4 speed")
+            wallHeight = random(100, 300)
+            if(wallHeight - lastHeight>=100)
+                wall = new Wall(wallHeight, random(200,350), walls[walls.length-1].x+1300, "config 4 speed")
             else 
                 wall = new Wall(wallHeight, random(200,350), walls[walls.length-1].x+random(700,800), "config 4 speed")
-
         }
 
         walls.push(wall)
-
-
         walls = walls.slice(1, )
         // if(wallHeight)
         // if(Math.abs(lastWall(walls).height-wallHeight)>100)
@@ -288,12 +288,13 @@ function gameSetup(){
     walls = [];
     scoreUpdate = false
     startonclick = false
+    showHigh = false
     walls[0] = new Wall(random(100,400), random(190,250), WIDTH, "config 0 ") //for begining
-    walls[0] = new Wall(100,  200, WIDTH) //for speed 3 test
+    // walls[0] = new Wall(100,  random(200,400), WIDTH) //for speed 3 test
     readyToFly = true
     for(i=1;i<5;i++){
         walls[i] = new Wall(random(100,400), random(190,250), walls[i-1].x+random(600,700), "config 0 ") //final
-        // walls[i] = new Wall(random(100,400), 190, walls[i-1].x+random(800,900)) //for speed 3 test
+        // walls[i] = new Wall(random(walls[i-1].height,walls[i-1].height+100), random(200,400), walls[i-1].x+random(500,1200)) //for speed 3 test
     } 
     
     // walls[2] = new Wall(100, 190, walls[i-1].x+500)
