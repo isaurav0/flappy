@@ -223,9 +223,9 @@ function runningState(){
             console.log("3 speed wall added")
             wallHeight = random(100,200)
             if(wallHeight - lastHeight>=300)
-                wall = new Wall(wallHeight, random(200,400), walls[walls.length-1].x+1200, "config 3")
+                wall = new Wall(wallHeight, random(200,350), walls[walls.length-1].x+1200, "config 3")
             else 
-                wall = new Wall(wallHeight, random(200,400), walls[walls.length-1].x+random(500,1200), "config 3")
+                wall = new Wall(wallHeight, random(200,350), walls[walls.length-1].x+random(500,1200), "config 3")
         }
 
         if(speed == 3){ // 4 speed config
@@ -243,15 +243,17 @@ function runningState(){
         // if(Math.abs(lastWall(walls).height-wallHeight)>100)
             // wall = new Wall(wallHeight, random(200,250), walls[walls.length-1].x+random(400,600))
     }
-        
-    for(i=0;i<walls.length;i++){
-        if(isWallActive(bird, walls[i]))
-            walls[i].update(true)
-        else
-            walls[i].update(false)
-    }    
-    
 
+    for(i=0;i<walls.length;i++){
+        if(score==prevHighscore && i==0){
+            walls[0].update(true)
+        }
+        else{
+            walls[i].update(false)
+        }
+            
+    }
+        
     if(gameOver(bird, walls[0])){
         const gameOverMusic = document.getElementById("gameOver");
         gameOverMusic.play()
@@ -263,6 +265,7 @@ function runningState(){
         setTimeout(function() { startonclick= true }, 500);
         return
     }
+
 
     GRAVITY+=0.2;
     window.requestAnimationFrame(runningState);
@@ -288,7 +291,7 @@ function gameSetup(){
     walls = [];
     scoreUpdate = false
     startonclick = false
-    showHigh = false
+    prevHighscore = window.localStorage.getItem('score')
     walls[0] = new Wall(random(100,400), random(190,250), WIDTH, "config 0 ") //for begining
     // walls[0] = new Wall(100,  random(200,400), WIDTH) //for speed 3 test
     readyToFly = true
