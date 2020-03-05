@@ -15,7 +15,7 @@ git clone https://github.com/isaurav0/flappy
 ``` 
 cd flappy
 ```
-3. Open greet.html file with your web browser. 
+3. Open greet.html file on your web browser. 
 
 
 #Caveats
